@@ -1,0 +1,118 @@
+[
+  {
+    "id": "1745717803071",
+    "reference": "Krichewsky, Damien. 2021. «Political Responsiveness: The Identification and Processing of Problems in Modern Polities». ",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "La propuesta del autor remite a la relación entre sistema político y problemas construidos socialmente. Estos no remiten o no son reductibles a la agregación de preferencias, la fuerza de las demandas y los intereses.\n\nDicha definición se puede utilizar en estudios comparados, donde las variables independientes serían: las estructuras internas del régimen político cuyo impacto resulta distinto ante el proceso de solving-problem. ",
+    "generalDef": "\"Responsiveness \nis redefined as the process whereby both democratic and non-democratic political  systems selectively identify and address problems that they attribute to “society”,  according to the systems’ own structures, their dynamic of self-reproduction (au- topoiesis), and their structural couplings with other spheres of modern society. As  we will argue, while this process of attribution comprises alleged “demands” and  “preferences” of citizens, it extends beyond this specific aspect of politics\" p. 122",
+    "additionalQuestions": [
+      {
+        "id": "4",
+        "question": "¿Establece un método de observación para R?",
+        "type": "yesnodetail",
+        "answer": "yes",
+        "detail": "Mediante observación de discrepancias. Entre dos estados, uno más deseable que otro. p. 127. Esto coloca el foco no sólo en el problema sino en la solución. La R es, por tanto, siempre selectiva. Esa especie de autoselección está delimitada por la estructura interna del sistema político. Esto podría denominarse \"patterns of responsiveness\". Este enfoque propone un cambio del \"quién\" al \"qué\" (p. 132)."
+      }
+    ]
+  },
+  {
+    "id": "1747102316365",
+    "reference": "Hobolt, Sara Binzer, y Robert Klemmemsen. 2005. «Responsive Government? Public Opinion and Government Policy Preferences in Britain and Denmark». Political Studies 53: 379-402.\n",
+    "researchType": "empirical",
+    "defines": "yes",
+    "specificDef": "\"Policy responsiveness is generally assumed, since elected politicians are expected to respond to public preferences due to the threat of electoral sanction.\" Y también como: \"the congruence of collective public attitudes towards political issues with the policy preferences and actions of elected representatives.\" p. 381.",
+    "generalDef": "\"La habilidad de un sistema político para responder a las preferencias de sus ciudadanos es central para la teoría y práctica democrática\". p. 380",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747102417898",
+    "reference": "Sabl, Andrew. 2015. «The Two Cultures of Democratic Theory: Responsiveness, Democratic Quality, and the Empirical-Normative Divide». Perspectives on Politics 13 (2): 345-65.\n",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "\"Fit between the preferences of the citizens and the committed policy positions of their representatives.\" El autor describe que para los científicos empíricos, especialmente aquellos que estudian la política estadounidense, el concepto de \"responsiveness\" es considerado como: \"a central consideration in evaluating the quality of democratic governance\" o \"the key indicator,\" \"the explicit standard.\"",
+    "generalDef": "",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747102476438",
+    "reference": "Lagos, M. 2003. «Support for and Satisfaction with Democracy». International Journal of  Public Opinion Research 15 (4): 471-87.\n",
+    "researchType": "theoretical",
+    "defines": "no",
+    "specificDef": "",
+    "generalDef": "",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747102846661",
+    "reference": "Page, Benjamin I. 1994. «Democratic Responsiveness? Untangling the Links between Public Opinion and Policy». PS, Political Science & Politics 27 (1): 25-29.\n",
+    "researchType": "theoretical",
+    "defines": "no",
+    "specificDef": "",
+    "generalDef": "",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747102869231",
+    "reference": "Disch, Lisa. 2012. «Democratic Representation and the Constituency Paradox». Perspectives on Politics 10 (3): 599-616.\n",
+    "researchType": "theoretical",
+    "defines": "no",
+    "specificDef": "",
+    "generalDef": "",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747103810577",
+    "reference": "Hobolt, Sara Binzer, y Robert Klemmensen. 2008. «Government Responsiveness and Political Competition in Comparative Perspective». Comparative political studies 41 (3): 309-37.\n",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "",
+    "generalDef": "Al inicio (p. 309) al inicio del artículo citan a Dahl: \"As Dahl writes, 'A key characteristic of democracy is the continued responsiveness of the government to the preferences of the people' (Dahl, 1971, p. 1). In this 'delegate' view of representation, elected representatives are expected to act responsively to the needs of their constituents.\"\n\nAdemás, en las páginas 316-317, los autores ofrecen una definición más específica donde distinguen dos tipos de responsiveness:\n\"We examine two aspects of responsiveness: rhetorical responsiveness—that is, the extent to which government's selective policy emphases in speeches reflect public issue preferences—and effective responsiveness—that is, the correspondence between public issue preferences and budgetary priorities.\"\n\nPor lo tanto, los autores no solo utilizan la definición básica de Dahl sobre responsiveness como característica democrática, sino que también elaboran su propia definición operativa distinguiendo entre responsiveness retórica y efectiva para su análisis.",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747104028993",
+    "reference": "Morlino, Leonardo. 2005. «Calidad de la democracia. Notas para su discusión». Metapolítica, n.o Enero/febrero: 37-53.\n",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "",
+    "generalDef": "La definición se encuentra en la sección \"EL RESULTADO: SATISFACCIÓN Y LEGITIMIDAD\" (páginas 44-45 del documento). Específicamente, en la página 44 dice: \"Al analizar la calidad democrática es bastante común referirse a la reciprocidad del gobierno, es decir, la capacidad de satisfacer los intereses de los gobernados al ejecutar las políticas que responden a sus demandas.\"\nPosteriormente, en la página 45, el autor amplía esta definición citando a Eulan y Karps (1977): \"Esta dimensión de la calidad democrática no es tan difícil de definir. Eulan y Karps (1977) han demostrado ya cómo la reciprocidad es una forma de ver la representación 'en acción'. Ellos señalan también cómo esta dimensión se manifiesta a través de cuatro componentes principales en relación a: las políticas en el centro del interés público; los servicios que son garantizados a los individuos y los grupos representados por el gobierno; la distribución de bienes materiales a sus electores a través de la administración pública y otras entidades; y la extensión de bienes simbólicos que crean, refuerzan o reproducen un sentido de lealtad y apoyo al gobierno.\"\nEl autor trata la \"reciprocidad\" como una de las cinco dimensiones clave de la calidad democrática, específicamente como la dimensión relacionada con el resultado.",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747104189156",
+    "reference": "Cantú Ramos, Gabriela Aída. 2019. «Responsividad democrática. Distintas aproximaciones a un concepto con un amplio potencial». Política y gobierno XXVI (2): 237-59.\n",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "",
+    "generalDef": "\"Con base en esto se considera entonces la responsividad como la capacidad de la autoridad pública (en sus distintos niveles) para ofrecer respuestas a alguna necesidad o problema —que puede asumir la forma de una preferencia agregada o de una demanda particular— de los ciudadanos con facultades para exigirlas, ya sea a través de su voto en los procesos electorales o de otras formas de participación política.\" p. 253.",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747104432554",
+    "reference": "Morlino, Leonardo, y Francesco Raniolo. 2021. «Neopopulismo y calidad de la democracia». Estancias. Revista de Investigación en Derecho y Ciencias Sociales 1 (1): 15-52.\n",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "",
+    "generalDef": "El concepto aparece mencionado en varias partes del texto:\n\nEn la página 22-23, mencionan la responsividad como la octava dimensión de la calidad democrática: \"La última dimensión hace referencia a la responsividad, es decir, la correspondencia del sistema con las necesidades de los ciudadanos, y con la sociedad civil en general (Tabla 1).\"\nEn la página 24, se menciona nuevamente dentro del \"mecanismo de convergencia mutua\" junto con otras dimensiones como \"Estado de Derecho, rendición de cuentas electorales, rendición de cuentas inter-institucional, participación, competición, libertad, igualdad y responsividad\".\nEn la página 25, hablan de cómo la protesta puede mejorar la capacidad de responsividad: \"la protesta, especialmente la no violenta a pesar de ser radical, trae consigo una mejora en la capacidad de responsividad\".\n\nSin embargo, los autores no desarrollan una definición específica y detallada del concepto de responsividad en el artículo, más allá de describirla brevemente como \"la correspondencia del sistema con las necesidades de los ciudadanos, y con la sociedad civil en general\". ",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747104794526",
+    "reference": "Morlino, Leonardo. 2007. «Explicar la calidad democrática: ¿qué tan relevantes son las tradiciones autoritarias?» Revista De Ciencia Politica 27: 3-22.\n",
+    "researchType": "theoretical",
+    "defines": "yes",
+    "specificDef": "El autor también indica cómo medir o evaluar este concepto:\n\"El problema empírico de la investigación de la responsiveness puede superarse sólo recuperando la legitimidad gozada por las instituciones democráticas de un determinado país en un determinado momento. Es decir, sólo analizando a través de sondeos la difusión de actitudes favorables a las instituciones democráticas vigentes y de los relativos, consiguientes comportamientos que muestran la satisfacción e indirectamente una cierta cercanía y percepción de responsiveness por parte de la sociedad civil.\"",
+    "generalDef": "La definición se encuentra en la página 7 del artículo, en el quinto párrafo. El autor define el concepto de la siguiente manera:\n\"La responsiveness o bien reciprocidad no es una dimensión procedimental como las anteriores, sino una dimensión que tiene que ver con el resultado en el sentido de la capacidad de respuesta que encuentra la satisfacción de los ciudadanos y de la sociedad civil, más en general. La responsiveness puede ser vista a través de cuatro componentes principales en relación a las políticas en el centro de la atención pública, a los servicios para asegurar a los individuos y grupos que se representan, a la distribución de beneficios materiales a los propios representados a través de la administración pública o, de otro modo, a la donación de bienes simbólicos que crean, refuerzan o reproducen un sentido de confianza y apoyo de los representantes hacia los representados (Eulau y Karps, 1977).\"",
+    "additionalQuestions": []
+  },
+  {
+    "id": "1747105336998",
+    "reference": "Houwelingen, Pepijn van, y Paul Dekker. 2021. «Satisfaction with Democracy in Perspective: Anchoring Today by Looking Back and Forward». Polish Political Science Review 9 (1): 14-26.\n",
+    "researchType": "empirical",
+    "defines": "yes",
+    "specificDef": "",
+    "generalDef": "El artículo menciona \"responsiveness\" de varias formas:\n\nEn la página 15, se menciona que \"satisfaction with democracy\" (SWD) es usada para conceptos como \"democratic responsiveness\" según Ceron y Memoli (2016) y Morlino y Quaranta (2014). El texto dice: \"SWD might as such be a theoretical concept (Norris, 1999, Clarke, Dutt and Kornberg, 1993, Dahlberg and Holmberg, 2014, Christmann, 2018), or it is used for concepts such as 'democratic responsiveness' (Ceron and Memoli, 2016; Morlino and Quaranta, 2014), and 'perceived effectiveness of a regime' (Lagos, 2003)'.\"\n\nEn la parte metodológica, en la página 22, el artículo hace referencia a \"indicators for political efficacy or perceived political responsiveness ('People like me don't have any say about what the government does' and 'I don't think the government cares much what people like me think')\".\n\nSin embargo, el artículo no proporciona una definición propia o detallada del concepto de \"responsiveness\". Los autores utilizan el término \"perceived political responsiveness\" como una variable de medición en su análisis, operacionalizada a través de dos preguntas de encuesta, pero no desarrollan teóricamente el concepto.\nPor lo tanto:\n\nNo hay una definición explícita de \"responsiveness\" elaborada por los autores.\n\nHay una definición implícita de carácter empírico, donde \"perceived political responsiveness\" se entiende como la percepción de los ciudadanos sobre si el gobierno se preocupa por lo que ellos piensan y si tienen influencia en las acciones gubernamentales.\n\nEl artículo hace referencia a otros autores (Ceron y Memoli, Morlino y Quaranta) que relacionan la satisfacción con la democracia con la \"responsiveness democrática\", pero no desarrolla estas definiciones.\n\nEn resumen, el concepto aparece de forma implícita con un objetivo principalmente empírico (de medición), pero el artículo no proporciona una conceptualización teórica propia de \"responsiveness\".",
+    "additionalQuestions": []
+  }
+]
