@@ -312,18 +312,62 @@ function downloadCSV(content, filename) {
   }
 }
 
-// Función para mostrar errores
+// Función para mostrar errores mejorada
 function showError(message) {
+  const container = document.querySelector('.entries-container') || document.querySelector('.card-body');
+  
+  if (container) {
+    container.innerHTML = `
+      <div class="alert alert-danger">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <div class="flex-grow-1">
+            <strong>Error:</strong> ${message}
+          </div>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <h6>Posibles soluciones:</h6>
+          <ul class="mb-3">
+            <li>Verifica que el archivo <code>responsiveness.json</code> esté en la misma carpeta que <code>index.html</code></li>
+            <li>Si estás ejecutando desde archivo local, usa un servidor web:
+              <ul>
+                <li>Python: <code>python -m http.server</code></li>
+                <li>Node.js: <code>npx serve .</code></li>
+                <li>VS Code: instala la extensión "Live Server"</li>
+              </ul>
+            </li>
+            <li>Abre la consola del navegador (F12) para más detalles</li>
+          </ul>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" onclick="location.reload()">
+              <i class="fas fa-sync-alt me-1"></i>Reintentar
+            </button>
+            <button class="btn btn-outline-primary" onclick="loadTestData()">
+              <i class="fas fa-flask me-1"></i>Usar datos de prueba
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+// Función para cargar datos de prueba manualmente
+function loadTestData() {
+  allData = getTestData();
+  initializeFilters();
+  updateStats();
+  filterEntries();
+  showLoading(false);
+  
   const container = document.querySelector('.entries-container');
-  container.innerHTML = `
-    <div class="alert alert-danger">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      ${message}
-      <button class="btn btn-link p-0 ms-2" onclick="location.reload()">
-        Reintentar
-      </button>
-    </div>
-  `;
+  if (container && container.previousElementSibling) {
+    const alert = container.previousElementSibling;
+    if (alert.classList.contains('alert')) {
+      alert.remove();
+    }
+  }
 }
 
 // Event listeners adicionales una vez que el DOM esté cargado
