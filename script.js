@@ -1,307 +1,376 @@
-// Variables globales
-let allData = [];
-let selectedEntries = [];
-
-// Cargar datos al iniciar
-document.addEventListener('DOMContentLoaded', function() {
-  loadData();
+function renderTimelineGrouped(container, data) {
+  const entriesByYear = {};
   
-  // Configurar eventos
-  document.getElementById('search-input').addEventListener('input', filterEntries);
-  document.getElementById('type-filter').addEventListener('change', filterEntries);
-  document.getElementById('defines-filter').addEventListener('change', filterEntries);
+  data.forEach(item => {
+    const year = getYearFromReference(item.reference);
+    if (year) {
+      if (!entriesByYear[year]) entriesByYear[year] = [];
+      entriesByYear[year].push(item);
+    }
+  });
+  
+  if (Object.keys(entriesByYear).length === 0) {
+    container.innerHTML = '<div class="alert alert-info">No hay datos suficientes para mostrar la línea de tiempo.</div>';
+    return;
+  }
+  
+  let html = '<div class="timeline-vertical">';
+  
+  Object.keys(entriesByYear)
+    .sort((a, b) => parseInt(a) - parseInt(b))
+    .forEach(year => {
+      html += `
+        <div class="timeline-group">
+          <div class="timeline-year">
+            <span class="timeline-year-label">${year}</span>
+          </div>
+          <div class="timeline-items">
+      `;
+      
+      entriesByYear[year].forEach((item, index) => {
+        const authorYear = extractAuthorYear(item.reference);
+        html += `
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-card">
+                <h6 class="mb-1">${authorYear}</h6>
+                <div class="d-flex gap-2 mb-2">
+                  <span class="badge ${item.researchType === 'theoretical' ? 'badge-theoretical' : 'badge-empirical'}">
+                    ${item.researchType === 'theoretical' ? 'Teórico' : 'Empírico'}
+                  </span>
+                  ${item.defines === 'yes' ? '<span class="badge badge-defines">Define</span>' : ''}
+                </div>
+                ${item.generalDef ? 
+                  `<p class="small mb-0">${truncateText(item.generalDef, 150)}</p>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div></div>';
+    });
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function updateTimelineMode() {
+  updateTimeline();
+}
+
+// Inicializar gráficos
+function initializeCharts() {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js no está cargado');
+    return;
+  }
+  
+  initTypeChart();
+  initDecadeChart();
+  initTrendsChart();
+}
+
+function initTypeChart() {
+  const ctx = document.getElementById('typeChart');
+  if (!ctx) return;
+  
+  const data = filteredData.length > 0 ? filteredData : allData;
+  const theoretical = data.filter(item => item.researchType === 'theoretical').length;
+  const empirical = data.filter(item => item.researchType === 'empirical').length;
+  
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Teórico', 'Empírico'],
+      datasets: [{
+        data: [theoretical, empirical],
+        backgroundColor: [chartColors.primary, chartColors.secondary],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 20,
+            usePointStyle: true
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const count = context.raw;
+              const total = theoretical + empirical;
+              const percentage = ((count / total) * 100).toFixed(1);
+              return `${label}: ${count} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function initDecadeChart() {
+  const ctx = document.getElementById('decadeChart');
+  if (!ctx) return;
+  
+  const data = filteredData.length > 0 ? filteredData : allData;
+  const decadeCounts = {};
+  
+  data.forEach(item => {
+    const year = getYearFromReference(item.reference);
+    if (year) {
+      const decade = Math.floor(year / 10) * 10;
+      decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
+    }
+  });
+  
+  const decades = Object.keys(decadeCounts).sort();
+  const counts = decades.map(decade => decadeCounts[decade]);
+  
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: decades.map(d => `${d}s`),
+      datasets: [{
+        label: 'Publicaciones',
+        data: counts,
+        backgroundColor: chartColors.primary,
+        borderColor: chartColors.primary,
+        borderWidth: 1,
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+}
+
+function initTrendsChart() {
+  const ctx = document.getElementById('trendsChart');
+  if (!ctx) return;
+  
+  const data = filteredData.length > 0 ? filteredData : allData;
+  const yearCounts = {};
+  const yearDefines = {};
+  
+  data.forEach(item => {
+    const year = getYearFromReference(item.reference);
+    if (year) {
+      yearCounts[year] = (yearCounts[year] || 0) + 1;
+      if (item.defines === 'yes') {
+        yearDefines[year] = (yearDefines[year] || 0) + 1;
+      }
+    }
+  });
+  
+  const years = Object.keys(yearCounts).sort();
+  const totalCounts = years.map(year => yearCounts[year]);
+  const definesCounts = years.map(year => yearDefines[year] || 0);
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'Total de publicaciones',
+          data: totalCounts,
+          borderColor: chartColors.primary,
+          backgroundColor: chartColors.primary + '20',
+          fill: true,
+          tension: 0.4
+        },
+        {
+          label: 'Con definición',
+          data: definesCounts,
+          borderColor: chartColors.success,
+          backgroundColor: chartColors.success + '20',
+          fill: true,
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      }
+    }
+  });
+}
+
+// Función para toggle de tema oscuro
+function toggleDarkMode() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  // Reinicializar gráficos si están visibles
+  if (document.getElementById('analytics-tab').classList.contains('active')) {
+    setTimeout(initializeCharts, 100);
+  }
+}
+
+// Cargar tema guardado
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
 });
 
-// Función para cargar datos
-async function loadData() {
-  try {
-    const response = await fetch('responsiveness.json');
-    if (!response.ok) {
-      throw new Error('No se pudo cargar los datos');
+// Exportar datos
+function exportData() {
+  const dataToExport = filteredData.length > 0 ? filteredData : allData;
+  const csvContent = convertToCSV(dataToExport);
+  downloadCSV(csvContent, 'responsiveness_data.csv');
+}
+
+function exportComparison() {
+  const selectedData = allData.filter(item => selectedEntries.includes(item.id));
+  const csvContent = convertToCSV(selectedData);
+  downloadCSV(csvContent, 'responsiveness_comparison.csv');
+}
+
+function convertToCSV(data) {
+  const headers = [
+    'ID',
+    'Referencia',
+    'Tipo de Investigación',
+    'Define Concepto',
+    'Definición General',
+    'Definición Específica',
+    'Preguntas Adicionales'
+  ];
+  
+  const rows = data.map(item => [
+    item.id,
+    `"${item.reference.replace(/"/g, '""')}"`,
+    item.researchType,
+    item.defines,
+    `"${(item.generalDef || '').replace(/"/g, '""')}"`,
+    `"${(item.specificDef || '').replace(/"/g, '""')}"`,
+    `"${item.additionalQuestions ? item.additionalQuestions.map(q => q.question).join('; ').replace(/"/g, '""') : ''}"`
+  ]);
+  
+  return [headers, ...rows].map(row => row.join(',')).join('\n');
+}
+
+function downloadCSV(content, filename) {
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  
+  if (link.download !== undefined) {
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+}
+
+// Función para mostrar errores
+function showError(message) {
+  const container = document.querySelector('.entries-container');
+  container.innerHTML = `
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      ${message}
+      <button class="btn btn-link p-0 ms-2" onclick="location.reload()">
+        Reintentar
+      </button>
+    </div>
+  `;
+}
+
+// Event listeners adicionales una vez que el DOM esté cargado
+document.addEventListener('DOMContentLoaded', function() {
+  // Manejar enlaces de navegación smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+  
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + K para focus en búsqueda
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('search-input').focus();
     }
     
-    allData = await response.json();
-    
-    // Actualizar estadísticas
-    updateStats();
-    
-    // Mostrar entradas
-    filterEntries();
-    
-  } catch (error) {
-    console.error('Error:', error);
-    document.querySelector('.entries-container').innerHTML = 
-      '<div class="alert alert-danger">Error al cargar los datos. Por favor, intenta recargar la página.</div>';
-  }
-}
-
-// Función para actualizar estadísticas
-function updateStats() {
-  const totalEntries = allData.length;
-  const definesCount = allData.filter(item => item.defines === 'yes').length;
-  const theoreticalCount = allData.filter(item => item.researchType === 'theoretical').length;
-  const empiricalCount = allData.filter(item => item.researchType === 'empirical').length;
-  
-  const statsHTML = `
-    <div class="col-md-3">
-      <div class="stat-card">
-        <div class="stat-number">${totalEntries}</div>
-        <div class="stat-label">Total de Referencias</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stat-card">
-        <div class="stat-number">${definesCount}</div>
-        <div class="stat-label">Definen el Concepto</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stat-card">
-        <div class="stat-number">${theoreticalCount}</div>
-        <div class="stat-label">Teóricas</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stat-card">
-        <div class="stat-number">${empiricalCount}</div>
-        <div class="stat-label">Empíricas</div>
-      </div>
-    </div>
-  `;
-  
-  document.querySelector('.stats-container').innerHTML = statsHTML;
-}
-
-// Función para filtrar entradas
-function filterEntries() {
-  const searchTerm = document.getElementById('search-input').value.toLowerCase();
-  const typeFilter = document.getElementById('type-filter').value;
-  const definesOnly = document.getElementById('defines-filter').checked;
-  
-  const filteredData = allData.filter(item => {
-    // Filtrar por término de búsqueda
-    const matchesSearch = searchTerm === '' || 
-      item.reference.toLowerCase().includes(searchTerm) ||
-      (item.specificDef && item.specificDef.toLowerCase().includes(searchTerm)) ||
-      (item.generalDef && item.generalDef.toLowerCase().includes(searchTerm));
-    
-    // Filtrar por tipo de investigación
-    const matchesType = typeFilter === 'all' || item.researchType === typeFilter;
-    
-    // Filtrar por si define el concepto
-    const matchesDefines = !definesOnly || item.defines === 'yes';
-    
-    return matchesSearch && matchesType && matchesDefines;
+    // Escape para limpiar búsqueda
+    if (e.key === 'Escape') {
+      const searchInput = document.getElementById('search-input');
+      if (searchInput === document.activeElement) {
+        searchInput.value = '';
+        filterEntries();
+        searchInput.blur();
+      }
+    }
   });
   
-  renderEntries(filteredData);
-  renderComparison();
-  renderTimeline(filteredData);
-}
-
-// Función para renderizar entradas
-function renderEntries(entries) {
-  const container = document.querySelector('.entries-container');
-  
-  if (entries.length === 0) {
-    container.innerHTML = '<div class="alert alert-info">No se encontraron resultados con los filtros actuales.</div>';
-    return;
-  }
-  
-  let html = `<div class="mb-2 text-muted small">Mostrando ${entries.length} de ${allData.length} entradas</div>`;
-  
-  entries.forEach(item => {
-    const authorYear = item.reference.split('.')[0];
-    
-    html += `
-      <div class="entry-card" data-id="${item.id}">
-        <div class="d-flex justify-content-between align-items-start">
-          <h3 class="h5 mb-1">${authorYear}</h3>
-          <div>
-            <span class="badge ${item.researchType === 'theoretical' ? 'badge-theoretical' : 'badge-empirical'} me-1">
-              ${item.researchType === 'theoretical' ? 'Teórico' : 'Empírico'}
-            </span>
-            <span class="badge ${item.defines === 'yes' ? 'badge-defines' : 'badge-no-defines'} me-1">
-              ${item.defines === 'yes' ? 'Define' : 'No define'}
-            </span>
-            <button 
-              class="btn btn-sm ${selectedEntries.includes(item.id) ? 'btn-primary' : 'btn-outline-primary'}" 
-              onclick="toggleSelection('${item.id}')"
-            >
-              ${selectedEntries.includes(item.id) ? 'Seleccionado' : 'Seleccionar'}
-            </button>
-          </div>
-        </div>
-        <p class="small text-muted">${item.reference}</p>
-        
-        ${item.defines === 'yes' ? `
-          <div class="mt-2">
-            ${item.generalDef ? `
-              <div class="mb-2">
-                <h4 class="h6 mb-1">Definición General:</h4>
-                <div class="definition-block">${item.generalDef}</div>
-              </div>
-            ` : ''}
-            
-            ${item.specificDef ? `
-              <div>
-                <h4 class="h6 mb-1">Definición Específica:</h4>
-                <div class="definition-block">${item.specificDef}</div>
-              </div>
-            ` : ''}
-          </div>
-        ` : ''}
-        
-        ${item.additionalQuestions && item.additionalQuestions.length > 0 ? `
-          <div class="mt-3">
-            <h4 class="h6 mb-1">Preguntas adicionales:</h4>
-            <ul class="list-group">
-              ${item.additionalQuestions.map(q => `
-                <li class="list-group-item">
-                  <span class="fw-medium">${q.question}</span>
-                  ${q.answer === 'yes' ? '<span class="ms-2 text-success">Sí</span>' : ''}
-                  ${q.detail ? `<p class="small text-muted mt-1">${q.detail}</p>` : ''}
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        ` : ''}
-      </div>
-    `;
+  // Mejorar accesibilidad
+  document.addEventListener('focusin', function(e) {
+    if (e.target.matches('.entry-card')) {
+      e.target.classList.add('focused');
+    }
   });
   
-  container.innerHTML = html;
-}
-
-// Función para alternar selección
-function toggleSelection(id) {
-  if (selectedEntries.includes(id)) {
-    selectedEntries = selectedEntries.filter(entryId => entryId !== id);
-  } else {
-    selectedEntries.push(id);
-  }
-  
-  // Re-renderizar para actualizar botones y comparación
-  filterEntries();
-}
-
-// Función para renderizar comparación
-function renderComparison() {
-  const container = document.querySelector('.comparison-container');
-  
-  if (selectedEntries.length === 0) {
-    container.innerHTML = `
-      <div class="alert alert-info">
-        Selecciona definiciones para comparar usando el botón "Seleccionar" en la vista de Definiciones.
-      </div>
-    `;
-    return;
-  }
-  
-  const selectedData = allData.filter(item => selectedEntries.includes(item.id));
-  
-  let html = `
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead class="table-light">
-          <tr>
-            <th>Autor y Año</th>
-            <th>Tipo</th>
-            <th>Definición General</th>
-            <th>Definición Específica</th>
-          </tr>
-        </thead>
-        <tbody>
-  `;
-  
-  selectedData.forEach(item => {
-    const authorYear = item.reference.split('.')[0];
-    
-    html += `
-      <tr>
-        <td class="fw-medium">${authorYear}</td>
-        <td>
-          <span class="badge ${item.researchType === 'theoretical' ? 'badge-theoretical' : 'badge-empirical'}">
-            ${item.researchType === 'theoretical' ? 'Teórico' : 'Empírico'}
-          </span>
-        </td>
-        <td>${item.generalDef || '<span class="text-muted">No especificada</span>'}</td>
-        <td>${item.specificDef || '<span class="text-muted">No especificada</span>'}</td>
-      </tr>
-    `;
+  document.addEventListener('focusout', function(e) {
+    if (e.target.matches('.entry-card')) {
+      e.target.classList.remove('focused');
+    }
   });
-  
-  html += `
-        </tbody>
-      </table>
-    </div>
-  `;
-  
-  container.innerHTML = html;
-}
-
-// Función para extraer año de la referencia
-function getYearFromReference(reference) {
-  const match = reference.match(/\d{4}/);
-  return match ? parseInt(match[0]) : null;
-}
-
-// Función para renderizar línea de tiempo
-function renderTimeline(entries) {
-  const container = document.querySelector('.timeline-container');
-  
-  // Extraer años y ordenar entradas por año
-  const entriesWithYears = entries
-    .map(item => ({
-      ...item,
-      year: getYearFromReference(item.reference)
-    }))
-    .filter(item => item.year !== null)
-    .sort((a, b) => a.year - b.year);
-  
-  if (entriesWithYears.length === 0) {
-    container.innerHTML = '<div class="alert alert-info">No hay suficientes datos para mostrar la línea de tiempo.</div>';
-    return;
-  }
-  
-  // Obtener años únicos para la escala
-  const uniqueYears = [...new Set(entriesWithYears.map(item => item.year))];
-  
-  let html = `
-    <div class="timeline-line"></div>
-  `;
-  
-  // Añadir marcas de años
-  uniqueYears.forEach((year, index) => {
-    const position = (index / (uniqueYears.length - 1)) * 100;
-    
-    html += `
-      <div class="timeline-dot" style="left: ${position}%"></div>
-      <div class="small text-muted" style="position: absolute; left: ${position}%; transform: translateX(-50%); top: 52%;">
-        ${year}
-      </div>
-    `;
-  });
-  
-  // Añadir entradas
-  entriesWithYears.forEach((item, index) => {
-    const yearIndex = uniqueYears.indexOf(item.year);
-    const position = (yearIndex / (uniqueYears.length - 1)) * 100;
-    const isTop = index % 2 === 0;
-    const authorYear = item.reference.split('.')[0];
-    
-    html += `
-      <div class="timeline-entry ${isTop ? 'top' : 'bottom'}" style="left: ${position}%">
-        <div class="timeline-connector ${isTop ? 'top' : 'bottom'}"></div>
-        <div class="card ${item.defines === 'yes' ? 'border-success' : ''}">
-          <div class="card-body p-2">
-            <p class="mb-1 fw-medium small">${authorYear}</p>
-            ${item.defines === 'yes' ? '<p class="mb-0 text-success small">Define el concepto</p>' : ''}
-          </div>
-        </div>
-      </div>
-    `;
-  });
-  
-  container.innerHTML = html;
-}
+});
